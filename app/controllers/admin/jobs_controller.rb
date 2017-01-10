@@ -1,13 +1,14 @@
 class Admin::JobsController < ApplicationController
 
   before_filter :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
-  
+  layout "admin"
+
   def index
     @jobs = Job.all
   end
 
   def show
-    @jobs = Job.find(params[:id])
+    @job = Job.find(params[:id])
   end
 
   def new
@@ -43,6 +44,20 @@ class Admin::JobsController < ApplicationController
     @job.destroy
     flash[:altet] = "Job deleted"
     redirect_to admin_jobs_path
+  end
+
+  def publish
+    @job = Job.find(params[:id])
+    @job.publish!
+    @job.save
+    redirect_to :back
+  end
+
+  def hide
+    @job = Job.find(params[:id])
+    @job.hide!
+
+    redirect_to :back
   end
 
 
